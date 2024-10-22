@@ -12,15 +12,14 @@ export interface GameGridValueInterface {
     values: CellState[][];
 }
 
-
 export function useGame() {
-    const [GameState, setGameState] = useState<GameGridValueInterface>({
+    const [gameState, setGameState] = useState<GameGridValueInterface>({
         turn: TurnState.Player1,
         values: initialGridValues
     });
 
     const playMove = (columnIndex: number) => {
-        const newGameState = { ...GameState };
+        const newGameState = { ...gameState };
         const columnValues = newGameState.values[columnIndex];
 
         const emptyCellIndex = columnValues.slice().reverse().findIndex(cellValue => cellValue === CellState.Empty);
@@ -36,5 +35,5 @@ export function useGame() {
         setGameState(newGameState);
     }
 
-    return { GameState, playMove };
+    return { gameState, playMove };
 }
