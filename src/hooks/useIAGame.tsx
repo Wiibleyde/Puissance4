@@ -2,12 +2,30 @@ import { useState } from 'react';
 import { CellState } from "@/components/Game/Cell";
 import { initialGridValues } from '@/config';
 import { TurnState } from '@/components/Turn/Turn';
+import { Delay } from '@/utils';
 
 export interface GameGridValueInterface {
     turn: TurnState;
     values: CellState[][];
 }
 
+/**
+ * Custom hook to manage the game state and logic for a Connect Four game with an AI opponent.
+ *
+ * @returns {Object} An object containing the current game state, a function to play a move, and a function to check for a winner.
+ * @property {GameGridValueInterface} gameState - The current state of the game grid and the current player's turn.
+ * @property {function} playMove - Function to handle a player's move in a specified column.
+ * @property {function} checkWinner - Function to check if there is a winner in the current game state.
+ *
+ * @example
+ * const { gameState, playMove, checkWinner } = useIAGame();
+ *
+ * // To play a move in column 3
+ * playMove(3);
+ *
+ * // To check if there is a winner
+ * const winner = checkWinner();
+ */
 export function useIAGame() {
     const [gameState, setGameState] = useState<GameGridValueInterface>({
         turn: TurnState.Player1,
@@ -66,6 +84,7 @@ export function useIAGame() {
     };
 
     const playMove = (columnIndex: number) => {
+        if(gameState.turn === TurnState.Player2) return;
         const columnValues = gameState.values[columnIndex];
         const emptyCellIndex = getEmptyCellIndex(columnValues);
         if (emptyCellIndex === -1) return;
@@ -78,7 +97,9 @@ export function useIAGame() {
         else playLogicMove();
     };
 
-    const playLogicMove = () => {
+    const playLogicMove = async () => {
+        await Delay(500);
+
         const { values } = gameState;
         const emptyColumns = values.map((column, index) => ({
             index,
