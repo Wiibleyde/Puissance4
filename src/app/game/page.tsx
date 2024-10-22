@@ -1,19 +1,13 @@
-import { CellState } from "@/components/Game/Cell";
+"use client";
 import { GameGrid } from "@/components/Game/GameGrid";
-import { gridConfig } from "@/config";
-
-export interface GameGridValueInterface {
-    values: CellState[][];
-}
+import { useGame } from "@/hooks/useGame";
 
 export default function GamePage() {
-    const GameGridValues: GameGridValueInterface = {
-        values: Array.from({ length: gridConfig.height }).map(() => Array.from({ length: gridConfig.width }).map(() => CellState.Empty)),
-    }
+    const { GameState, playMove } = useGame();
 
     return (
         <div>
-            <GameGrid gameGridValues={GameGridValues} />
+            <GameGrid gameGridValues={GameState} playMove={playMove} />
         </div>
     );
 }
