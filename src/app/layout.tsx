@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: "Jeu de puissance 4",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

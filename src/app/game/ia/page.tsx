@@ -1,12 +1,14 @@
 "use client";
 import { GameGrid } from "@/components/Game/GameGrid";
-import { useGame } from "@/hooks/useGame";
+import { Turn } from "@/components/Turn/Turn";
+import { useIAGame } from "@/hooks/useIAGame";
 
 export default function GamePage() {
-    const { gameState, playMove } = useGame();
+    const { gameState, playMove } = useIAGame();
 
     return (
         <div>
+            <Turn turn={gameState.turn} />
             <GameGrid gameGridValues={gameState} playMove={playMove} />
         </div>
     );

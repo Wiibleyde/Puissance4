@@ -1,4 +1,4 @@
-import { GameGridValueInterface } from "@/hooks/useGame";
+import { GameGridValueInterface } from "@/hooks/useIAGame";
 import { Column } from "./Column"
 
 export function GameGrid({ gameGridValues, playMove }: { gameGridValues: GameGridValueInterface, playMove: (columnIndex: number) => void }) {
