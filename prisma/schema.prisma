@@ -46,6 +46,7 @@ model Account {
   @@index([userId])
 }
 
+// Optional for session management (using JWT for now)
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -59,6 +60,7 @@ model Session {
   @@index([userId])
 }
 
+// Optional for email verification
 model VerificationToken {
   identifier String
   token      String
