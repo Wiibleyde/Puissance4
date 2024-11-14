@@ -2,11 +2,11 @@ import { Socket } from "socket.io";
 
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { parse } from 'url';
-import next from 'next';
 import { Server } from 'socket.io';
+import next from "next";
 
 
-export enum Messages {
+enum Messages {
 	PLAYER_ACTION = "player-action",
 	UPDATE_GAME_STATE = "update-game-state",
 	SEND_PLAYER_TURN = "send-player-turn"

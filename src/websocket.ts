@@ -2,8 +2,12 @@
 import { TurnState } from "@/components/Turn/Turn";
 import { GameGridValueInterface } from "@/interfaces";
 import io, { Socket } from 'socket.io-client';
-import { Messages } from "../../../server";
 
+enum Messages {
+	PLAYER_ACTION = "player-action",
+	UPDATE_GAME_STATE = "update-game-state",
+	SEND_PLAYER_TURN = "send-player-turn"
+}
 
 export async function createSocket() {
   const socket = io('http://localhost:3000');

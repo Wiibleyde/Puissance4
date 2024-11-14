@@ -1,5 +1,5 @@
 'use client';
-import { createSocket, sendPlayerAction } from '@/app/api/websocket';
+import { createSocket, sendPlayerAction } from '@/websocket';
 import { Turn, TurnState } from '@/components/Turn/Turn';
 import React, { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
