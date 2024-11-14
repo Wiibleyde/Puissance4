@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node --compiler-options {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} server.ts",
+    "dev": "ts-node --compiler-options '{\"module\":\"commonjs\"}' server.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
