@@ -2,9 +2,8 @@ import { Socket } from "socket.io";
 
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { parse } from 'url';
+import next from 'next';
 import { Server } from 'socket.io';
-import next from "next";
-
 
 enum Messages {
 	PLAYER_ACTION = "player-action",
@@ -30,7 +29,7 @@ app.prepare().then(() => {
 
   const disconnectAllSockets = () => {
     Array.from(io.sockets.sockets.values()).forEach((socket) => {
-      console.log(socket);
+      console.log(socket.id);
       socket.disconnect(true);
     });
   }
@@ -58,7 +57,7 @@ app.prepare().then(() => {
 			console.log(`Actual game turn: ${gameState.turn}`);
 
 			if (gameState.turn === playerTurn) {
-				socket.emit(Messages.UPDATE_GAME_STATE, gameState, columnIndex);
+				io.emit(Messages.UPDATE_GAME_STATE, gameState, columnIndex);
 			}
 		})
 

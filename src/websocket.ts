@@ -1,4 +1,3 @@
-'use server'
 import { TurnState } from "@/components/Turn/Turn";
 import { GameGridValueInterface } from "@/interfaces";
 import io, { Socket } from 'socket.io-client';
