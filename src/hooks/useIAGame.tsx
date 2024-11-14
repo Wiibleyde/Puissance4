@@ -3,7 +3,7 @@ import { CellState } from "@/components/Game/Cell";
 import { initialGridValues } from '@/config';
 import { TurnState } from '@/components/Turn/Turn';
 import { Delay } from '@/utils';
-import { GameGridValueInterface } from '@/enums';
+import { GameGridValueInterface } from '@/interfaces';
 
 /**
  * Custom hook to manage the game state and logic for a Connect Four game with an AI opponent.

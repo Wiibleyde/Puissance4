@@ -1,5 +1,5 @@
 import { TurnState } from "@/components/Turn/Turn";
-import { GameGridValueInterface } from "@/hooks/useIAGame"; //TODO change it by the one of the multiplayer game
+import { GameGridValueInterface } from "@/interfaces";
 import io, { Socket } from 'socket.io-client';
 
 
