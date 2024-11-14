@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react"
+import { Session } from "next-auth";
 
 export const metadata: Metadata = {
   title: "Puissance 4",
@@ -7,16 +9,21 @@ export const metadata: Metadata = {
 };
 
 
-export default function RootLayout({
+export default function LocaleLayout({
   children,
-}: Readonly<{
+  session
+}: {
   children: React.ReactNode;
-}>) {
+  session: Session | null;
+}) {
+
   return (
-    <html lang="en">
-      <body>
-        {children}
-      </body>
+    <html>
+      <SessionProvider session={session}>
+        <body>
+          {children}
+        </body>
+      </SessionProvider>
     </html>
   );
 }
