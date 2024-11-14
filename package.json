@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "ts-node --compiler-options '{\"module\":\"commonjs\"}' server.ts",
+    "dev-windows": "ts-node --compiler-options {\"\"\"module\"\"\":\"\"\"commonjs\"\"\"} server.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
