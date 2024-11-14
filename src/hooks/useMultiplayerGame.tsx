@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { CellState } from "@/components/Game/Cell";
 import { initialGridValues } from '@/config';
 import { TurnState } from '@/components/Turn/Turn';
-import { Delay } from '@/utils';
 import { GameGridValueInterface } from '@/interfaces';
 
 /**
@@ -80,7 +79,6 @@ export function useMultiplayerGame() {
     };
 
     const playMove = (columnIndex: number) => {
-        if(gameState.turn === TurnState.Player2) return;
         const columnValues = gameState.values[columnIndex];
         const emptyCellIndex = getEmptyCellIndex(columnValues);
         if (emptyCellIndex === -1) return;
@@ -90,54 +88,7 @@ export function useMultiplayerGame() {
 
         const winner = checkWinner();
         if (winner !== CellState.Empty) handleWin(winner);
-        else playLogicMove();
-    };
-
-    const playLogicMove = async () => {
-        await Delay(500);
-
-        const { values } = gameState;
-        const emptyColumns = values.map((column, index) => ({
-            index,
-            count: column.filter(cellValue => cellValue === CellState.Empty).length
-        })).filter(column => column.count > 0);
-
-        const canWin = (player: CellState) => {
-            for (const { index } of emptyColumns) {
-                const columnValues = values[index];
-                const emptyCellIndex = getEmptyCellIndex(columnValues);
-                if (emptyCellIndex === -1) continue;
-
-                columnValues[emptyCellIndex] = player;
-                if (checkWinner() === player) {
-                    columnValues[emptyCellIndex] = CellState.Empty;
-                    return index;
-                }
-                columnValues[emptyCellIndex] = CellState.Empty;
-            }
-            return -1;
-        };
-
-        const winningMove = canWin(CellState.Player2);
-        if (winningMove !== -1) {
-            updateGameState(values[winningMove], getEmptyCellIndex(values[winningMove]), CellState.Player2);
-            const winner = checkWinner();
-            if (winner !== CellState.Empty) handleWin(winner);
-            return;
-        }
-
-        const blockingMove = canWin(CellState.Player1);
-        if (blockingMove !== -1) {
-            updateGameState(values[blockingMove], getEmptyCellIndex(values[blockingMove]), CellState.Player2);
-            const winner = checkWinner();
-            if (winner !== CellState.Empty) handleWin(winner);
-            return;
-        }
-
-        const randomColumnIndex = emptyColumns[Math.floor(Math.random() * emptyColumns.length)].index;
-        updateGameState(values[randomColumnIndex], getEmptyCellIndex(values[randomColumnIndex]), CellState.Player2);
-        const winner = checkWinner();
-        if (winner !== CellState.Empty) handleWin(winner);
+        // else playLogicMove();
     };
 
     return { gameState, playMove, checkWinner };

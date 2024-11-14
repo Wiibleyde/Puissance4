@@ -1,16 +1,14 @@
-// import { TurnState } from "../Puissance4/src/components/Turn/Turn";
 import { Socket } from "socket.io";
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { parse } from 'url';
 import next from 'next';
 import { Server } from 'socket.io';
 
 
-enum Messages {
+export enum Messages {
 	PLAYER_ACTION = "player-action",
-	PLAYER_ACTION_RESPONSE = "player-action-response",
+	UPDATE_GAME_STATE = "update-game-state",
 	SEND_PLAYER_TURN = "send-player-turn"
 }
 
@@ -30,6 +28,13 @@ app.prepare().then(() => {
 
 	const io = new Server(server)
 
+  const disconnectAllSockets = () => {
+    Array.from(io.sockets.sockets.values()).forEach((socket) => {
+      console.log(socket);
+      socket.disconnect(true);
+    });
+  }
+
 	io.on("connection", (socket: Socket) => {
 		// Disconnect new sockets when max connected socket number is reached
 		if (userCount >= maxUserCount) {
@@ -41,7 +46,6 @@ app.prepare().then(() => {
 		userCount++
 		console.log("Player connected:", socket.id);
 		console.log(`${userCount}/${maxUserCount} users connected`)
-		//TODO check if the good player turn is send for the new connected client (case when a client has left)
 		if (userCount === 1) {
 			socket.emit(Messages.SEND_PLAYER_TURN, 0)
 		} else {
@@ -49,21 +53,20 @@ app.prepare().then(() => {
 		}
 
 		// Logic for handling player action
-		socket.on(Messages.PLAYER_ACTION, (gameState, playerTurn) => {
-			console.log(`Player ${socket.id} is making an action, his turn is ${gameState.turn}`);
-			console.log(gameState);
+		socket.on(Messages.PLAYER_ACTION, (gameState, playerTurn, columnIndex) => {
+			console.log(`Player ${socket.id} is making an action, his turn is ${playerTurn} and tries to play on column ${columnIndex}`);
+			console.log(`Actual game turn: ${gameState.turn}`);
 
-			if (gameState.turn !== playerTurn) {
-				socket.emit(Messages.PLAYER_ACTION_RESPONSE, "Non mais oh mec, tu fais quoi la, c'est pas ton tour !")
-			} else {
-				socket.emit(Messages.PLAYER_ACTION_RESPONSE, "Tu peux y aller mec")
-				//TODO Call function that will update the gameState then send it to everyone so they can update it
+			if (gameState.turn === playerTurn) {
+				socket.emit(Messages.UPDATE_GAME_STATE, gameState, columnIndex);
 			}
 		})
 
 		socket.on("disconnect", () => {
-			userCount--
-			console.log("Player disconnected:", socket.id);
+			// userCount--
+			// console.log("Player disconnected:", socket.id);
+      userCount = 0
+      disconnectAllSockets()
 		});
 	})
 

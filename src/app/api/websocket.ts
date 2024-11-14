@@ -1,19 +1,19 @@
+'use server'
 import { TurnState } from "@/components/Turn/Turn";
 import { GameGridValueInterface } from "@/interfaces";
 import io, { Socket } from 'socket.io-client';
+import { Messages } from "../../../server";
 
 
-export function createSocket() {
+export async function createSocket() {
   const socket = io('http://localhost:3000');
   return socket
 }
 
-export function sendPlayerAction(socket: Socket, gameState: GameGridValueInterface, playerTurn: TurnState) {
+export async function sendPlayerAction(socket: Socket, gameState: GameGridValueInterface, playerTurn: TurnState, columnIndex: number) {
   try {
-    socket.emit('player-action', gameState, playerTurn);
-    socket.on("player-action-response", (status: string) => {
-      console.log(status);
-    })
+    console.log("Your turn is", playerTurn);
+    socket.emit(Messages.PLAYER_ACTION, gameState, playerTurn, columnIndex);
   } catch (error) {
     console.error('Error:', error);
   }
