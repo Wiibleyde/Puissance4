@@ -79,6 +79,7 @@ export function useMultiplayerGame() {
     };
 
     const playMove = (columnIndex: number) => {
+        console.log(gameState.turn);
         const columnValues = gameState.values[columnIndex];
         const emptyCellIndex = getEmptyCellIndex(columnValues);
         if (emptyCellIndex === -1) return;

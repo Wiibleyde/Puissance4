@@ -41,8 +41,7 @@ export default function GamePage() {
       });
 
       socket.on('update-game-state', (newGameState: GameGridValueInterface, columnIndex: number) => {
-        console.log(newGameState);
-        console.log(columnIndex);
+        console.log(newGameState.turn);
         playMove(columnIndex); // Call playMove to update game state
       });
 
@@ -65,7 +64,7 @@ export default function GamePage() {
   return (
     <div>
       <h1>{socketId ? `Socket ID: ${socketId}` : disconnected ? 'La partie est pleine :(' : 'Connexion en cours...'}</h1>
-      <h1>{playerTurn && `You are PLAYER ${playerTurn}`}</h1>
+      <h1>{playerTurn !== undefined && `You are PLAYER ${playerTurn}`}</h1>
       {/* {socket && <button className='w-16 h-12 p-4 bg-red-600' onClick={onClickSendPlayerAction}></button>} */}
       <Turn turn={gameState.turn} />
       <GameGrid gameGridValues={gameState} playMove={onClickSendPlayerAction} />

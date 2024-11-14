@@ -53,17 +53,18 @@ app.prepare().then(() => {
 
 		// Logic for handling player action
 		socket.on(Messages.PLAYER_ACTION, (gameState, playerTurn, columnIndex) => {
-			console.log(`Player ${socket.id} is making an action, his turn is ${playerTurn} and tries to play on column ${columnIndex}`);
-			console.log(`Actual game turn: ${gameState.turn}`);
+			console.log(`Player ${playerTurn+1} and tries to play on column ${columnIndex}`);
+			console.log(`Actual game turn: ${gameState.turn+1}`);
 
 			if (gameState.turn === playerTurn) {
 				io.emit(Messages.UPDATE_GAME_STATE, gameState, columnIndex);
-			}
+        console.log("JOUE");
+			} else {
+        console.log("PAS JOUE");
+      }
 		})
 
 		socket.on("disconnect", () => {
-			// userCount--
-			// console.log("Player disconnected:", socket.id);
       userCount = 0
       disconnectAllSockets()
 		});
