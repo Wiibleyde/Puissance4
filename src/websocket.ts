@@ -15,7 +15,7 @@ export async function createSocket() {
 
 export async function sendPlayerAction(socket: Socket, gameState: GameGridValueInterface, playerTurn: TurnState, columnIndex: number) {
   try {
-    console.log("Your turn is", playerTurn);
+    console.log("Your turn is", playerTurn+1);
     socket.emit(Messages.PLAYER_ACTION, gameState, playerTurn, columnIndex);
   } catch (error) {
     console.error('Error:', error);

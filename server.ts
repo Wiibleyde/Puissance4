@@ -58,9 +58,9 @@ app.prepare().then(() => {
 
 			if (gameState.turn === playerTurn) {
 				io.emit(Messages.UPDATE_GAME_STATE, gameState, columnIndex);
-        console.log("JOUE");
+        console.log(`Player ${playerTurn+1} PEUT JOUER`);
 			} else {
-        console.log("PAS JOUE");
+        console.log(`Player ${playerTurn+1} NE PEUT PAS JOUER`);
       }
 		})
 
