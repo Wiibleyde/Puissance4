@@ -9,13 +9,15 @@ import { createSocket, sendPlayerAction } from '@/websocket';
 /**
  * Custom hook to manage the game state and logic for a Connect Four game with a multiplayer mode.
  *
- * @returns {Object} An object containing the current game state, a function to play a move, and a function to check for a winner.
+ * @returns {Object} An object containing the current game state,  a function to play a move, and a function to check for a winner.
  * @property {GameGridValueInterface} gameState - The current state of the game grid and the current player's turn.
- * @property {function} playMove - Function to handle a player's move in a specified column.
- * @property {function} checkWinner - Function to check if there is a winner in the current game state.
+ * @property {string} socketId - The id of the current client socket
+ * @property {boolean} disconnected - The connection status of the player
+ * @property {function} onClickSendPlayerAction - Function to send the player action to the server and update the state if the player turn is according to the gameStateTurn.
+ * @property {TurnState} playerTurn - The turn associated to the player based on an Enum.
  *
  * @example
- * const { gameState, playMove, checkWinner } = useIAGame();
+ * const { gameState, socketId, disconnected, onClickSendPlayerAction, playerTurn } = useMultiplayerGame();
  *
  * // To play a move in column 3
  * playMove(3);
@@ -29,6 +31,7 @@ export function useMultiplayerGame() {
         values: initialGridValues
     });
 
+    // Define a gameState reference to use the gameState without re-rendering the component and persistint it inside the custom hook 
     const gameStateRef = useRef<GameGridValueInterface>(gameState);
     
     const socketRef = useRef<Socket | undefined>(undefined);
@@ -36,32 +39,34 @@ export function useMultiplayerGame() {
     const [playerTurn, setPlayerTurn] = useState<TurnState | undefined>(undefined);
     const [disconnected, setDisconnected] = useState<boolean>(false);
 
+    // function that sends the player action to the server 
     const onClickSendPlayerAction = (columnIndex: number) => {
       if (socketRef.current && playerTurn !== undefined) {
         sendPlayerAction(socketRef.current, gameStateRef.current, playerTurn, columnIndex)
       }
     }
 
+    // useEffect that creates the client socket and defines the socket listening events 
     useEffect(() => {
-      // Create and connect the socket only once when the component mounts
       const initializeSocket = async () => {
         const socket = await createSocket();
         socketRef.current = socket;
 
+        // sets the client socketId and update player status to connected when the socket is succesfully connected to the server
         socket.on('connect', () => {
           console.log('Connected with socket ID:', socket.id);
           setSocketId(socket.id);
           setDisconnected(false);
         });
 
+        // sets the player turn when the server sends the 'send-player-turn' event to the client socket
         socket.on('send-player-turn', (turn: number) => {
           setPlayerTurn(turn);
         });
 
-        socket.on('update-game-state', (newGameState: GameGridValueInterface, columnIndex: number) => {
-          console.log(newGameState.turn);
-          console.log(newGameState.values);
-          playMove(columnIndex); // Call playMove to update game state
+        // calls playMove to update game state when the server sends the 'update-game-state' event to the client socket
+        socket.on('update-game-state', (columnIndex: number) => {
+          playMove(columnIndex);
         });
 
         socket.on('disconnect', () => {
@@ -74,7 +79,7 @@ export function useMultiplayerGame() {
 
       initializeSocket();
 
-      // Clean up the socket connection when the component unmounts
+      // Disconnect the socket when the component is unmounted
       return () => {
         socketRef.current?.disconnect();
       };
@@ -86,7 +91,6 @@ export function useMultiplayerGame() {
     };
 
     const updateGameState = (columnValues: CellState[], actualEmptyCellIndex: number, player: CellState) => {
-        console.log(`PLAYER ACTUEL : ${player+1}`);
         columnValues[actualEmptyCellIndex] = player;
         const newGameState = {
           ...gameStateRef.current,
@@ -95,7 +99,6 @@ export function useMultiplayerGame() {
         }
         setGameState(newGameState)
         gameStateRef.current = newGameState
-        console.log(`TOUR SUIVANT ${gameStateRef.current.turn+1}`);
     };
 
     const checkWinner = () => {
@@ -127,17 +130,18 @@ export function useMultiplayerGame() {
         return CellState.Empty;
     };
 
+    // function that resets the gameState on a player win and display an alertPopup
     const handleWin = (winner: CellState) => {
         alert(`Player ${winner === CellState.Player1 ? 1 : 2} wins!`);
-        gameStateRef.current = {
+        const beginningGameState = {
             turn: TurnState.Player1,
             values: initialGridValues
         };
+        setGameState(beginningGameState)
+        gameStateRef.current = beginningGameState
     };
 
     const playMove = (columnIndex: number) => {
-        console.log(`TOUR ACTUEL ${gameStateRef.current.turn+1}`);
-        // console.log(gameState.values);
         const columnValues = gameStateRef.current.values[columnIndex];
         const emptyCellIndex = getEmptyCellIndex(columnValues);
         if (emptyCellIndex === -1) return;
@@ -147,7 +151,6 @@ export function useMultiplayerGame() {
 
         const winner = checkWinner();
         if (winner !== CellState.Empty) handleWin(winner);
-        // else playLogicMove();
     };
 
     return { gameState, socketId, disconnected, onClickSendPlayerAction, playerTurn };

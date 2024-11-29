@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import { GameGridValueInterface } from '@/interfaces';
 import { useMultiplayerGame } from '@/hooks/useMultiplayerGame';
 import { GameGrid } from '@/components/Game/GameGrid';
+import { PlayerTurnLabel } from '@/components/Turn/PlayerTurnLabel';
 
 
 export default function GamePage() {
@@ -16,7 +17,8 @@ export default function GamePage() {
   return (
     <div>
       <h1>{socketId ? `Socket ID: ${socketId}` : disconnected ? 'La partie est pleine :(' : 'Connexion en cours...'}</h1>
-      <h1>{playerTurn !== undefined && `You are PLAYER ${playerTurn+1}`}</h1>
+      {/* <h1>{playerTurn !== undefined && `You are PLAYER ${playerTurn+1}`}</h1> */}
+      {!disconnected && playerTurn && <PlayerTurnLabel playerTurn={playerTurn} />}
       <Turn turn={gameState.turn} />
       <GameGrid gameGridValues={gameState} playMove={onClickSendPlayerAction} />
     </div>
