@@ -38,6 +38,8 @@ export function useMultiplayerGame() {
     const [socketId, setSocketId] = useState<string | undefined>(undefined);
     const [playerTurn, setPlayerTurn] = useState<TurnState | undefined>(undefined);
     const [disconnected, setDisconnected] = useState<boolean>(false);
+    const [winner, setWinner] = useState<CellState | undefined>(undefined);
+    const [gameOver, setGameOver] = useState<boolean>(false);
 
     // function that sends the player action to the server 
     const onClickSendPlayerAction = (columnIndex: number) => {
@@ -132,13 +134,8 @@ export function useMultiplayerGame() {
 
     // function that resets the gameState on a player win and display an alertPopup
     const handleWin = (winner: CellState) => {
-        alert(`Player ${winner === CellState.Player1 ? 1 : 2} wins!`);
-        const beginningGameState = {
-            turn: TurnState.Player1,
-            values: initialGridValues
-        };
-        setGameState(beginningGameState)
-        gameStateRef.current = beginningGameState
+        setWinner(winner);
+        setGameOver(true);
     };
 
     const playMove = (columnIndex: number) => {
@@ -153,5 +150,5 @@ export function useMultiplayerGame() {
         if (winner !== CellState.Empty) handleWin(winner);
     };
 
-    return { gameState, socketId, disconnected, onClickSendPlayerAction, playerTurn };
+    return { gameState, socketId, disconnected, onClickSendPlayerAction, playerTurn, winner, gameOver };
 }

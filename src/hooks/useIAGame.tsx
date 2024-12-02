@@ -27,6 +27,8 @@ export function useIAGame() {
         turn: TurnState.Player1,
         values: initialGridValues
     });
+    const [winner, setWinner] = useState<CellState | undefined>(undefined);
+    const [gameOver, setGameOver] = useState<boolean>(false);
 
     const getEmptyCellIndex = (columnValues: CellState[]) => {
         const emptyCellIndex = columnValues.slice().reverse().findIndex(cellValue => cellValue === CellState.Empty);
@@ -72,7 +74,8 @@ export function useIAGame() {
     };
 
     const handleWin = (winner: CellState) => {
-        alert(`Player ${winner === CellState.Player1 ? 1 : 2} wins!`);
+        setWinner(winner);
+        setGameOver(true);
         setGameState({
             turn: TurnState.Player1,
             values: initialGridValues
@@ -140,5 +143,5 @@ export function useIAGame() {
         if (winner !== CellState.Empty) handleWin(winner);
     };
 
-    return { gameState, playMove, checkWinner };
+    return { gameState, playMove, checkWinner, winner, gameOver };
 }

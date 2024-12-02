@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 
-export default function LocaleLayout({
+export default function Layout({
   children,
   session
 }: {
