@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        discord: {
+          DEFAULT: '#5865F2',
+        }
+      },
       keyframes: {
         fall: {
           '0%': { transform: 'translateY(-100%)' },

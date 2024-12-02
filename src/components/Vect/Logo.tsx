@@ -1,7 +1,7 @@
 export function Logo() {
     return (
-        <svg width="372" height="99" viewBox="0 0 372 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_1_2)">
+        <svg width="200" height="50" viewBox="0 0 372 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_1_2)">
                 <circle cx="49.5" cy="49.5" r="49.5" fill="#E62619" />
                 <rect x="48" width="275" height="99" fill="#E62619" />
                 <circle cx="322.5" cy="49.5" r="49.5" fill="#FFE500" />
