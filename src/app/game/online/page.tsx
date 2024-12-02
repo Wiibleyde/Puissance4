@@ -10,7 +10,7 @@ export default function GamePage() {
   const { gameState, socketId, disconnected, onClickSendPlayerAction, playerTurn, winner, gameOver } = useMultiplayerGame();
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden bg-gray-900">
       <Navbar />
       <div className="bg-gray-900 text-white flex flex-col items-center justify-center h-full relative">
         <div className="flex flex-col items-center justify-center h-full">
